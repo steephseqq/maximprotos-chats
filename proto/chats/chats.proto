@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+package chats;
+
+option go_package="./chats;chatspb";
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+service Chats{
+    rpc Chats(ChatsRequest) returns (ChatsResponse){
+        option(google.api.http) = {
+            get: "/v1/chats"
+        };
+    };
+    rpc OpenChat(OpenChatRequest) returns (OpenChatResponse){
+        option (google.api.http) = {
+            get: "/v1/chats/{chat_id}"
+        };
+    };
+    rpc CreateChat(CreateChatRequest) returns (CreateChatResponse){
+        option (google.api.http) = {
+            post: "/v1/chats"
+            body: "*"
+        };
+    };
+
+}
+
+message ChatsRequest{
+    string user_id = 1;
+    int32 limit = 2;
+    google.protobuf.Timestamp offset_time = 3;
+}
+
+message ChatsResponse{
+    repeated Chat chats = 1;
+    bool has_more = 2; // Когда чаты закончатся клиент не сможет листать ниже
+
+}
+
+message Chat{
+    string id = 1; //UUID чата
+    ChatType type = 2;
+    oneof chat_data{
+        PrivateChatData private_chat = 3;
+        GroupChatData group_chat = 4;
+    }
+    google.protobuf.Timestamp updated_at = 5;
+    string last_message_preview = 6;
+    int32 unread_count = 7;
+    int32 members_count = 8;
+}
+
+enum ChatType {
+    CHAT_TYPE_UNSPECIFIED = 0;
+    PRIVATE = 1;
+    GROUP = 2;
+    CHANNEL = 3; 
+}
+
+message PrivateChatData{
+    string other_user_id = 1;
+    string other_user_name = 2;
+    string other_user_avatar_url = 3;
+}
+
+message GroupChatData{
+    string name = 1;
+    string avatar_url = 2;
+}
+
+
+message OpenChatRequest{
+    string chat_id = 1;
+    int32 limit = 2;
+    google.protobuf.Timestamp offset_time = 3;
+}
+
+message OpenChatResponse{
+    repeated Message messages = 1;
+    int32 members_count = 2;
+    Chat chat_info = 3;
+    bool has_more = 4;
+}
+
+message Message{
+    string id = 1;
+    string chat_id = 2;
+    User author = 3;
+    string content = 4;
+    google.protobuf.Timestamp created_at = 5;
+    string reply_to_message_id = 6;
+    bool is_edited = 7;
+    MessageType type = 8;
+}
+
+enum MessageType{
+    MESSAGE_TYPE_UNSPECIFIED = 0;
+    TEXT = 1;
+    IMAGE = 2;
+    FILE = 3;
+    SYSTEM = 4;
+}
+
+message User{
+    string id = 1;
+    string name = 2;
+    string avatar_url = 3;
+}
+
+message CreateChatRequest{
+    repeated string user_ids = 1; //N-ное количество user uuid'ов
+    string name = 2;
+    string avatar_url = 3;
+    string description = 4;
+    ChatType type = 5;
+}
+
+message CreateChatResponse{
+    string id = 1; // UUID чата
+    bool success = 2;
+}

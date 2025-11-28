@@ -25,6 +25,8 @@ service Chats{
         };
     };
 
+    rpc ChatsSearch(SearchRequest) returns (SearchResponse);
+
 }
 
 message ChatsRequest{
@@ -121,3 +123,15 @@ message CreateChatResponse{
     string id = 1; // UUID чата
     bool success = 2;
 }
+
+message SearchRequest{
+    string searchString = 1;
+    string limit = 2;
+    google.protobuf.Timestamp offset = 3;
+}
+
+message SearchResponse{
+    repeated Chat chats = 1;
+    bool has_more = 2;
+}
+

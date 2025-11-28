@@ -901,10 +901,16 @@ func (x *CreateChatResponse) GetSuccess() bool {
 }
 
 type SearchRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	SearchString  string                 `protobuf:"bytes,1,opt,name=searchString,proto3" json:"searchString,omitempty"`
-	Limit         int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
-	Offset        *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=offset,proto3" json:"offset,omitempty"`
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	SearchString string                 `protobuf:"bytes,1,opt,name=search_string,json=searchString,proto3" json:"search_string,omitempty"`
+	Limit        int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	WhereString  string                 `protobuf:"bytes,3,opt,name=where_string,json=whereString,proto3" json:"where_string,omitempty"`
+	// Строка в зависимости от которой будет
+	// меняться признак по которому ищется чат.
+	// Доступные: "user_id" , "name".
+	// UserID - когда нужно найти чаты для конкретного юзера(Например HomePage),
+	// Name - чаты ищутся по имени, но userID все равно передается в метаданных
+	Offset        *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=offset,proto3" json:"offset,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -951,6 +957,13 @@ func (x *SearchRequest) GetLimit() int32 {
 		return x.Limit
 	}
 	return 0
+}
+
+func (x *SearchRequest) GetWhereString() string {
+	if x != nil {
+		return x.WhereString
+	}
+	return ""
 }
 
 func (x *SearchRequest) GetOffset() *timestamppb.Timestamp {
@@ -1079,11 +1092,12 @@ const file_proto_chats_chats_proto_rawDesc = "" +
 	"\x04type\x18\x05 \x01(\x0e2\x0f.chats.ChatTypeR\x04type\">\n" +
 	"\x12CreateChatResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
-	"\asuccess\x18\x02 \x01(\bR\asuccess\"}\n" +
-	"\rSearchRequest\x12\"\n" +
-	"\fsearchString\x18\x01 \x01(\tR\fsearchString\x12\x14\n" +
-	"\x05limit\x18\x02 \x01(\x05R\x05limit\x122\n" +
-	"\x06offset\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\x06offset\"N\n" +
+	"\asuccess\x18\x02 \x01(\bR\asuccess\"\xa1\x01\n" +
+	"\rSearchRequest\x12#\n" +
+	"\rsearch_string\x18\x01 \x01(\tR\fsearchString\x12\x14\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12!\n" +
+	"\fwhere_string\x18\x03 \x01(\tR\vwhereString\x122\n" +
+	"\x06offset\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x06offset\"N\n" +
 	"\x0eSearchResponse\x12!\n" +
 	"\x05chats\x18\x01 \x03(\v2\v.chats.ChatR\x05chats\x12\x19\n" +
 	"\bhas_more\x18\x02 \x01(\bR\ahasMore*J\n" +

@@ -125,9 +125,15 @@ message CreateChatResponse{
 }
 
 message SearchRequest{
-    string searchString = 1;
+    string search_string = 1;
     int32 limit = 2;
-    google.protobuf.Timestamp offset = 3;
+    string where_string = 3; 
+    //Строка в зависимости от которой будет 
+    //меняться признак по которому ищется чат. 
+    //Доступные: "user_id" , "name". 
+    //UserID - когда нужно найти чаты для конкретного юзера(Например HomePage),
+    //Name - чаты ищутся по имени, но userID все равно передается в метаданных
+    google.protobuf.Timestamp offset = 4;
 }
 
 message SearchResponse{

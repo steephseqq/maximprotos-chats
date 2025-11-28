@@ -24,15 +24,18 @@ service Chats{
             body: "*"
         };
     };
-
-    rpc ChatsSearch(SearchRequest) returns (SearchResponse);
-
 }
 
 message ChatsRequest{
-    string user_id = 1;
+     string search_string = 1;
     int32 limit = 2;
-    google.protobuf.Timestamp offset_time = 3;
+    string where_string = 3; 
+    //Строка в зависимости от которой будет 
+    //меняться признак по которому ищется чат. 
+    //Доступные: "user_id" , "name". 
+    //UserID - когда нужно найти чаты для конкретного юзера(Например HomePage),
+    //Name - чаты ищутся по имени, но userID все равно передается в метаданных
+    google.protobuf.Timestamp offset = 4;
 }
 
 message ChatsResponse{
@@ -124,17 +127,6 @@ message CreateChatResponse{
     bool success = 2;
 }
 
-message SearchRequest{
-    string search_string = 1;
-    int32 limit = 2;
-    string where_string = 3; 
-    //Строка в зависимости от которой будет 
-    //меняться признак по которому ищется чат. 
-    //Доступные: "user_id" , "name". 
-    //UserID - когда нужно найти чаты для конкретного юзера(Например HomePage),
-    //Name - чаты ищутся по имени, но userID все равно передается в метаданных
-    google.protobuf.Timestamp offset = 4;
-}
 
 message SearchResponse{
     repeated Chat chats = 1;

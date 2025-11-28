@@ -19,10 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Chats_Chats_FullMethodName       = "/chats.Chats/Chats"
-	Chats_OpenChat_FullMethodName    = "/chats.Chats/OpenChat"
-	Chats_CreateChat_FullMethodName  = "/chats.Chats/CreateChat"
-	Chats_ChatsSearch_FullMethodName = "/chats.Chats/ChatsSearch"
+	Chats_Chats_FullMethodName      = "/chats.Chats/Chats"
+	Chats_OpenChat_FullMethodName   = "/chats.Chats/OpenChat"
+	Chats_CreateChat_FullMethodName = "/chats.Chats/CreateChat"
 )
 
 // ChatsClient is the client API for Chats service.
@@ -32,7 +31,6 @@ type ChatsClient interface {
 	Chats(ctx context.Context, in *ChatsRequest, opts ...grpc.CallOption) (*ChatsResponse, error)
 	OpenChat(ctx context.Context, in *OpenChatRequest, opts ...grpc.CallOption) (*OpenChatResponse, error)
 	CreateChat(ctx context.Context, in *CreateChatRequest, opts ...grpc.CallOption) (*CreateChatResponse, error)
-	ChatsSearch(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error)
 }
 
 type chatsClient struct {
@@ -73,16 +71,6 @@ func (c *chatsClient) CreateChat(ctx context.Context, in *CreateChatRequest, opt
 	return out, nil
 }
 
-func (c *chatsClient) ChatsSearch(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SearchResponse)
-	err := c.cc.Invoke(ctx, Chats_ChatsSearch_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ChatsServer is the server API for Chats service.
 // All implementations must embed UnimplementedChatsServer
 // for forward compatibility.
@@ -90,7 +78,6 @@ type ChatsServer interface {
 	Chats(context.Context, *ChatsRequest) (*ChatsResponse, error)
 	OpenChat(context.Context, *OpenChatRequest) (*OpenChatResponse, error)
 	CreateChat(context.Context, *CreateChatRequest) (*CreateChatResponse, error)
-	ChatsSearch(context.Context, *SearchRequest) (*SearchResponse, error)
 	mustEmbedUnimplementedChatsServer()
 }
 
@@ -109,9 +96,6 @@ func (UnimplementedChatsServer) OpenChat(context.Context, *OpenChatRequest) (*Op
 }
 func (UnimplementedChatsServer) CreateChat(context.Context, *CreateChatRequest) (*CreateChatResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateChat not implemented")
-}
-func (UnimplementedChatsServer) ChatsSearch(context.Context, *SearchRequest) (*SearchResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ChatsSearch not implemented")
 }
 func (UnimplementedChatsServer) mustEmbedUnimplementedChatsServer() {}
 func (UnimplementedChatsServer) testEmbeddedByValue()               {}
@@ -188,24 +172,6 @@ func _Chats_CreateChat_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chats_ChatsSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ChatsServer).ChatsSearch(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Chats_ChatsSearch_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatsServer).ChatsSearch(ctx, req.(*SearchRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Chats_ServiceDesc is the grpc.ServiceDesc for Chats service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -224,10 +190,6 @@ var Chats_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateChat",
 			Handler:    _Chats_CreateChat_Handler,
-		},
-		{
-			MethodName: "ChatsSearch",
-			Handler:    _Chats_ChatsSearch_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

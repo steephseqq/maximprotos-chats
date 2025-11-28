@@ -131,10 +131,16 @@ func (MessageType) EnumDescriptor() ([]byte, []int) {
 }
 
 type ChatsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Limit         int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
-	OffsetTime    *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=offset_time,json=offsetTime,proto3" json:"offset_time,omitempty"`
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	SearchString string                 `protobuf:"bytes,1,opt,name=search_string,json=searchString,proto3" json:"search_string,omitempty"`
+	Limit        int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	WhereString  string                 `protobuf:"bytes,3,opt,name=where_string,json=whereString,proto3" json:"where_string,omitempty"`
+	// Строка в зависимости от которой будет
+	// меняться признак по которому ищется чат.
+	// Доступные: "user_id" , "name".
+	// UserID - когда нужно найти чаты для конкретного юзера(Например HomePage),
+	// Name - чаты ищутся по имени, но userID все равно передается в метаданных
+	Offset        *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=offset,proto3" json:"offset,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -169,9 +175,9 @@ func (*ChatsRequest) Descriptor() ([]byte, []int) {
 	return file_proto_chats_chats_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ChatsRequest) GetUserId() string {
+func (x *ChatsRequest) GetSearchString() string {
 	if x != nil {
-		return x.UserId
+		return x.SearchString
 	}
 	return ""
 }
@@ -183,9 +189,16 @@ func (x *ChatsRequest) GetLimit() int32 {
 	return 0
 }
 
-func (x *ChatsRequest) GetOffsetTime() *timestamppb.Timestamp {
+func (x *ChatsRequest) GetWhereString() string {
 	if x != nil {
-		return x.OffsetTime
+		return x.WhereString
+	}
+	return ""
+}
+
+func (x *ChatsRequest) GetOffset() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Offset
 	}
 	return nil
 }
@@ -900,79 +913,6 @@ func (x *CreateChatResponse) GetSuccess() bool {
 	return false
 }
 
-type SearchRequest struct {
-	state        protoimpl.MessageState `protogen:"open.v1"`
-	SearchString string                 `protobuf:"bytes,1,opt,name=search_string,json=searchString,proto3" json:"search_string,omitempty"`
-	Limit        int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
-	WhereString  string                 `protobuf:"bytes,3,opt,name=where_string,json=whereString,proto3" json:"where_string,omitempty"`
-	// Строка в зависимости от которой будет
-	// меняться признак по которому ищется чат.
-	// Доступные: "user_id" , "name".
-	// UserID - когда нужно найти чаты для конкретного юзера(Например HomePage),
-	// Name - чаты ищутся по имени, но userID все равно передается в метаданных
-	Offset        *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=offset,proto3" json:"offset,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SearchRequest) Reset() {
-	*x = SearchRequest{}
-	mi := &file_proto_chats_chats_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SearchRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SearchRequest) ProtoMessage() {}
-
-func (x *SearchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_chats_chats_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SearchRequest.ProtoReflect.Descriptor instead.
-func (*SearchRequest) Descriptor() ([]byte, []int) {
-	return file_proto_chats_chats_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *SearchRequest) GetSearchString() string {
-	if x != nil {
-		return x.SearchString
-	}
-	return ""
-}
-
-func (x *SearchRequest) GetLimit() int32 {
-	if x != nil {
-		return x.Limit
-	}
-	return 0
-}
-
-func (x *SearchRequest) GetWhereString() string {
-	if x != nil {
-		return x.WhereString
-	}
-	return ""
-}
-
-func (x *SearchRequest) GetOffset() *timestamppb.Timestamp {
-	if x != nil {
-		return x.Offset
-	}
-	return nil
-}
-
 type SearchResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Chats         []*Chat                `protobuf:"bytes,1,rep,name=chats,proto3" json:"chats,omitempty"`
@@ -984,7 +924,7 @@ type SearchResponse struct {
 
 func (x *SearchResponse) Reset() {
 	*x = SearchResponse{}
-	mi := &file_proto_chats_chats_proto_msgTypes[12]
+	mi := &file_proto_chats_chats_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -996,7 +936,7 @@ func (x *SearchResponse) String() string {
 func (*SearchResponse) ProtoMessage() {}
 
 func (x *SearchResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_chats_chats_proto_msgTypes[12]
+	mi := &file_proto_chats_chats_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1009,7 +949,7 @@ func (x *SearchResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchResponse.ProtoReflect.Descriptor instead.
 func (*SearchResponse) Descriptor() ([]byte, []int) {
-	return file_proto_chats_chats_proto_rawDescGZIP(), []int{12}
+	return file_proto_chats_chats_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *SearchResponse) GetChats() []*Chat {
@@ -1037,12 +977,12 @@ var File_proto_chats_chats_proto protoreflect.FileDescriptor
 
 const file_proto_chats_chats_proto_rawDesc = "" +
 	"\n" +
-	"\x17proto/chats/chats.proto\x12\x05chats\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/api/annotations.proto\"z\n" +
-	"\fChatsRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
-	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12;\n" +
-	"\voffset_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"offsetTime\"M\n" +
+	"\x17proto/chats/chats.proto\x12\x05chats\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/api/annotations.proto\"\xa0\x01\n" +
+	"\fChatsRequest\x12#\n" +
+	"\rsearch_string\x18\x01 \x01(\tR\fsearchString\x12\x14\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12!\n" +
+	"\fwhere_string\x18\x03 \x01(\tR\vwhereString\x122\n" +
+	"\x06offset\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x06offset\"M\n" +
 	"\rChatsResponse\x12!\n" +
 	"\x05chats\x18\x01 \x03(\v2\v.chats.ChatR\x05chats\x12\x19\n" +
 	"\bhas_more\x18\x02 \x01(\bR\ahasMore\"\xf1\x02\n" +
@@ -1100,12 +1040,7 @@ const file_proto_chats_chats_proto_rawDesc = "" +
 	"\x04type\x18\x05 \x01(\x0e2\x0f.chats.ChatTypeR\x04type\">\n" +
 	"\x12CreateChatResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
-	"\asuccess\x18\x02 \x01(\bR\asuccess\"\xa1\x01\n" +
-	"\rSearchRequest\x12#\n" +
-	"\rsearch_string\x18\x01 \x01(\tR\fsearchString\x12\x14\n" +
-	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12!\n" +
-	"\fwhere_string\x18\x03 \x01(\tR\vwhereString\x122\n" +
-	"\x06offset\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x06offset\"q\n" +
+	"\asuccess\x18\x02 \x01(\bR\asuccess\"q\n" +
 	"\x0eSearchResponse\x12!\n" +
 	"\x05chats\x18\x01 \x03(\v2\v.chats.ChatR\x05chats\x12!\n" +
 	"\x05users\x18\x02 \x03(\v2\v.chats.UserR\x05users\x12\x19\n" +
@@ -1121,13 +1056,12 @@ const file_proto_chats_chats_proto_rawDesc = "" +
 	"\x05IMAGE\x10\x02\x12\b\n" +
 	"\x04FILE\x10\x03\x12\n" +
 	"\n" +
-	"\x06SYSTEM\x10\x042\xbd\x02\n" +
+	"\x06SYSTEM\x10\x042\x81\x02\n" +
 	"\x05Chats\x12E\n" +
 	"\x05Chats\x12\x13.chats.ChatsRequest\x1a\x14.chats.ChatsResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/v1/chats\x12X\n" +
 	"\bOpenChat\x12\x16.chats.OpenChatRequest\x1a\x17.chats.OpenChatResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/v1/chats/{chat_id}\x12W\n" +
 	"\n" +
-	"CreateChat\x12\x18.chats.CreateChatRequest\x1a\x19.chats.CreateChatResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/chats\x12:\n" +
-	"\vChatsSearch\x12\x14.chats.SearchRequest\x1a\x15.chats.SearchResponseB\x11Z\x0f./chats;chatspbb\x06proto3"
+	"CreateChat\x12\x18.chats.CreateChatRequest\x1a\x19.chats.CreateChatResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/chatsB\x11Z\x0f./chats;chatspbb\x06proto3"
 
 var (
 	file_proto_chats_chats_proto_rawDescOnce sync.Once
@@ -1142,7 +1076,7 @@ func file_proto_chats_chats_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_chats_chats_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_proto_chats_chats_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_proto_chats_chats_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_proto_chats_chats_proto_goTypes = []any{
 	(ChatType)(0),                 // 0: chats.ChatType
 	(MessageType)(0),              // 1: chats.MessageType
@@ -1157,40 +1091,36 @@ var file_proto_chats_chats_proto_goTypes = []any{
 	(*User)(nil),                  // 10: chats.User
 	(*CreateChatRequest)(nil),     // 11: chats.CreateChatRequest
 	(*CreateChatResponse)(nil),    // 12: chats.CreateChatResponse
-	(*SearchRequest)(nil),         // 13: chats.SearchRequest
-	(*SearchResponse)(nil),        // 14: chats.SearchResponse
-	(*timestamppb.Timestamp)(nil), // 15: google.protobuf.Timestamp
+	(*SearchResponse)(nil),        // 13: chats.SearchResponse
+	(*timestamppb.Timestamp)(nil), // 14: google.protobuf.Timestamp
 }
 var file_proto_chats_chats_proto_depIdxs = []int32{
-	15, // 0: chats.ChatsRequest.offset_time:type_name -> google.protobuf.Timestamp
+	14, // 0: chats.ChatsRequest.offset:type_name -> google.protobuf.Timestamp
 	4,  // 1: chats.ChatsResponse.chats:type_name -> chats.Chat
 	0,  // 2: chats.Chat.type:type_name -> chats.ChatType
 	5,  // 3: chats.Chat.private_chat:type_name -> chats.PrivateChatData
 	6,  // 4: chats.Chat.group_chat:type_name -> chats.GroupChatData
-	15, // 5: chats.Chat.updated_at:type_name -> google.protobuf.Timestamp
-	15, // 6: chats.OpenChatRequest.offset_time:type_name -> google.protobuf.Timestamp
+	14, // 5: chats.Chat.updated_at:type_name -> google.protobuf.Timestamp
+	14, // 6: chats.OpenChatRequest.offset_time:type_name -> google.protobuf.Timestamp
 	9,  // 7: chats.OpenChatResponse.messages:type_name -> chats.Message
 	4,  // 8: chats.OpenChatResponse.chat_info:type_name -> chats.Chat
 	10, // 9: chats.Message.author:type_name -> chats.User
-	15, // 10: chats.Message.created_at:type_name -> google.protobuf.Timestamp
+	14, // 10: chats.Message.created_at:type_name -> google.protobuf.Timestamp
 	1,  // 11: chats.Message.type:type_name -> chats.MessageType
 	0,  // 12: chats.CreateChatRequest.type:type_name -> chats.ChatType
-	15, // 13: chats.SearchRequest.offset:type_name -> google.protobuf.Timestamp
-	4,  // 14: chats.SearchResponse.chats:type_name -> chats.Chat
-	10, // 15: chats.SearchResponse.users:type_name -> chats.User
-	2,  // 16: chats.Chats.Chats:input_type -> chats.ChatsRequest
-	7,  // 17: chats.Chats.OpenChat:input_type -> chats.OpenChatRequest
-	11, // 18: chats.Chats.CreateChat:input_type -> chats.CreateChatRequest
-	13, // 19: chats.Chats.ChatsSearch:input_type -> chats.SearchRequest
-	3,  // 20: chats.Chats.Chats:output_type -> chats.ChatsResponse
-	8,  // 21: chats.Chats.OpenChat:output_type -> chats.OpenChatResponse
-	12, // 22: chats.Chats.CreateChat:output_type -> chats.CreateChatResponse
-	14, // 23: chats.Chats.ChatsSearch:output_type -> chats.SearchResponse
-	20, // [20:24] is the sub-list for method output_type
-	16, // [16:20] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	4,  // 13: chats.SearchResponse.chats:type_name -> chats.Chat
+	10, // 14: chats.SearchResponse.users:type_name -> chats.User
+	2,  // 15: chats.Chats.Chats:input_type -> chats.ChatsRequest
+	7,  // 16: chats.Chats.OpenChat:input_type -> chats.OpenChatRequest
+	11, // 17: chats.Chats.CreateChat:input_type -> chats.CreateChatRequest
+	3,  // 18: chats.Chats.Chats:output_type -> chats.ChatsResponse
+	8,  // 19: chats.Chats.OpenChat:output_type -> chats.OpenChatResponse
+	12, // 20: chats.Chats.CreateChat:output_type -> chats.CreateChatResponse
+	18, // [18:21] is the sub-list for method output_type
+	15, // [15:18] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_proto_chats_chats_proto_init() }
@@ -1208,7 +1138,7 @@ func file_proto_chats_chats_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_chats_chats_proto_rawDesc), len(file_proto_chats_chats_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   13,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

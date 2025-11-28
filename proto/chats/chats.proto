@@ -138,6 +138,7 @@ message SearchRequest{
 
 message SearchResponse{
     repeated Chat chats = 1;
-    bool has_more = 2;
+    repeated User users = 2;
+    bool has_more = 3;
 }
 

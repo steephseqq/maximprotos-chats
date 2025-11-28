@@ -976,7 +976,8 @@ func (x *SearchRequest) GetOffset() *timestamppb.Timestamp {
 type SearchResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Chats         []*Chat                `protobuf:"bytes,1,rep,name=chats,proto3" json:"chats,omitempty"`
-	HasMore       bool                   `protobuf:"varint,2,opt,name=has_more,json=hasMore,proto3" json:"has_more,omitempty"`
+	Users         []*User                `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
+	HasMore       bool                   `protobuf:"varint,3,opt,name=has_more,json=hasMore,proto3" json:"has_more,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1014,6 +1015,13 @@ func (*SearchResponse) Descriptor() ([]byte, []int) {
 func (x *SearchResponse) GetChats() []*Chat {
 	if x != nil {
 		return x.Chats
+	}
+	return nil
+}
+
+func (x *SearchResponse) GetUsers() []*User {
+	if x != nil {
+		return x.Users
 	}
 	return nil
 }
@@ -1097,10 +1105,11 @@ const file_proto_chats_chats_proto_rawDesc = "" +
 	"\rsearch_string\x18\x01 \x01(\tR\fsearchString\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12!\n" +
 	"\fwhere_string\x18\x03 \x01(\tR\vwhereString\x122\n" +
-	"\x06offset\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x06offset\"N\n" +
+	"\x06offset\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x06offset\"q\n" +
 	"\x0eSearchResponse\x12!\n" +
-	"\x05chats\x18\x01 \x03(\v2\v.chats.ChatR\x05chats\x12\x19\n" +
-	"\bhas_more\x18\x02 \x01(\bR\ahasMore*J\n" +
+	"\x05chats\x18\x01 \x03(\v2\v.chats.ChatR\x05chats\x12!\n" +
+	"\x05users\x18\x02 \x03(\v2\v.chats.UserR\x05users\x12\x19\n" +
+	"\bhas_more\x18\x03 \x01(\bR\ahasMore*J\n" +
 	"\bChatType\x12\x19\n" +
 	"\x15CHAT_TYPE_UNSPECIFIED\x10\x00\x12\v\n" +
 	"\aPRIVATE\x10\x01\x12\t\n" +
@@ -1168,19 +1177,20 @@ var file_proto_chats_chats_proto_depIdxs = []int32{
 	0,  // 12: chats.CreateChatRequest.type:type_name -> chats.ChatType
 	15, // 13: chats.SearchRequest.offset:type_name -> google.protobuf.Timestamp
 	4,  // 14: chats.SearchResponse.chats:type_name -> chats.Chat
-	2,  // 15: chats.Chats.Chats:input_type -> chats.ChatsRequest
-	7,  // 16: chats.Chats.OpenChat:input_type -> chats.OpenChatRequest
-	11, // 17: chats.Chats.CreateChat:input_type -> chats.CreateChatRequest
-	13, // 18: chats.Chats.ChatsSearch:input_type -> chats.SearchRequest
-	3,  // 19: chats.Chats.Chats:output_type -> chats.ChatsResponse
-	8,  // 20: chats.Chats.OpenChat:output_type -> chats.OpenChatResponse
-	12, // 21: chats.Chats.CreateChat:output_type -> chats.CreateChatResponse
-	14, // 22: chats.Chats.ChatsSearch:output_type -> chats.SearchResponse
-	19, // [19:23] is the sub-list for method output_type
-	15, // [15:19] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	10, // 15: chats.SearchResponse.users:type_name -> chats.User
+	2,  // 16: chats.Chats.Chats:input_type -> chats.ChatsRequest
+	7,  // 17: chats.Chats.OpenChat:input_type -> chats.OpenChatRequest
+	11, // 18: chats.Chats.CreateChat:input_type -> chats.CreateChatRequest
+	13, // 19: chats.Chats.ChatsSearch:input_type -> chats.SearchRequest
+	3,  // 20: chats.Chats.Chats:output_type -> chats.ChatsResponse
+	8,  // 21: chats.Chats.OpenChat:output_type -> chats.OpenChatResponse
+	12, // 22: chats.Chats.CreateChat:output_type -> chats.CreateChatResponse
+	14, // 23: chats.Chats.ChatsSearch:output_type -> chats.SearchResponse
+	20, // [20:24] is the sub-list for method output_type
+	16, // [16:20] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_proto_chats_chats_proto_init() }

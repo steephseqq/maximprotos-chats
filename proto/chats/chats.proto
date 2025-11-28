@@ -126,7 +126,7 @@ message CreateChatResponse{
 
 message SearchRequest{
     string searchString = 1;
-    string limit = 2;
+    int32 limit = 2;
     google.protobuf.Timestamp offset = 3;
 }
 
